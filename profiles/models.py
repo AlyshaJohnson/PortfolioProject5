@@ -18,6 +18,7 @@ MEDIUM = (
     ("EBOOK", "E-Book"),
     ("AUDIO", "Audiobook")
     )
+YES_NO = ((0, "No"), (1, "Yes"))
 
 
 class Profile(models.Model):
@@ -32,6 +33,7 @@ class Profile(models.Model):
     image = models.ImageField(
         upload_to='images/', default='../default_profile_qdjgyp'
     )
+    visibility = models.IntegerField(choices=YES_NO, default=1)
 
     class Meta:
         ordering = ['-created_at']
