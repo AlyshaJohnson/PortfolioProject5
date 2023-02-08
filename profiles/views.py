@@ -13,13 +13,13 @@ class ProfileList(APIView):
         serializer = ProfileSerializer(
             profiles,
             many=True,
-            context = {'request': request}
+            context={'request': request},
             )
         return Response(serializer.data)
 
 
 class ProfileDetail(APIView):
-    serializer_class = ProfileSerializer,
+    serializer_class = ProfileSerializer
     permission_classes = [IsOwnerOrReadOnly]
 
     def get_object(self, pk):
@@ -34,7 +34,7 @@ class ProfileDetail(APIView):
         profile = self.get_object(pk)
         serializer = ProfileSerializer(
             profile,
-            context = {'request': request}
+            context={'request': request},
             )
         return Response(serializer.data)
 
@@ -43,7 +43,7 @@ class ProfileDetail(APIView):
         serializer = ProfileSerializer(
             profile,
             data=request.data,
-            context = {'request': request}
+            context={'request': request},
             )
         if serializer.is_valid():
             serializer.save()
