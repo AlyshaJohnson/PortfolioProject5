@@ -18,7 +18,7 @@ class Review(models.Model):
     title = models.CharField(max_length=75, blank=False)
     owner = models.ForeignKey(User, on_delete=models.PROTECT, default="")
     description = models.TextField(max_length=500, blank=False)
-    date_added = models.DateField(blank=True, null=True)
+    date_added = models.DateTimeField(auto_now_add=True)
     book_started = models.DateField(blank=True, null=True)
     book_finished = models.DateField(blank=True, null=True)
     rating = models.IntegerField(choices=RATING, default=None)

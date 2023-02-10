@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from django.http import Http404
 from .models import Review
 from .serializers import ReviewSerializer
+from whirl.permissions import IsOwnerOrReadOnly, IsLibrarianOrUser
 
 
 class ReviewList(APIView):
@@ -33,10 +34,15 @@ class ReviewList(APIView):
 
 class ReviewDetailList(APIView):
     serializer_class = ReviewSerializer
+    permission_classes = [
+        IsOwnerOrReadOnly,
+        IsLibrarianOrUser,
+        permissions.IsAuthenticatedOrReadOnly,
+        ]
 
     def get_object(self, pk):
         try:
-            book = Review.objects.get(pk=pk)
+            review = Review.objects.get(pk=pk)
             return review
         except Review.DoesNotExist:
             raise Http404
@@ -54,19 +60,6 @@ class ReviewDetailList(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def post(self, request):
-        serializer = ReviewSerializer(
-            data=request.data, context={'request': request}
-        )
-        if serializer.is_valid():
-            serializer.save(owner=request.user)
-            return Response(
-                serializer.data, status=status.HTTP_201_CREATED
-            )
-        return Response(
-            serializer.errors, status=status.HTTP_400_BAD_REQUEST
-        )
 
     def delete(self, request, pk):
         post = self.get.object(pk)
