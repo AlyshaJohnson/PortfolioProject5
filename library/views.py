@@ -1,13 +1,18 @@
+from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import Http404
 from .models import Book, Genre, Tags
 from .serializers import LibrarySerializer
-from whirl.permissions import IsLibrarianOrUser
 
 
 class LibraryList(APIView):
-    permission_classes = [IsLibrarianOrUser]
+    serializer_class = LibrarySerializer
+
+    def get_permissions(self):
+        if self.request.method in ['POST']:
+            return [permissions.IsAdminUser()]
+        return [permissions.IsAuthenticated()]
 
     def get(self, request):
         books = Book.objects.all()
@@ -15,10 +20,28 @@ class LibraryList(APIView):
         self.check_object_permissions(self.request, books)
         return Response(serializer.data)
 
+    def post(self, request):
+        serializer = LibrarySerializer(
+            data=request.data, context={'request': request}
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                serializer.data, status=status.HTTP_201_CREATED
+            )
+        return Response(
+            serializer.errors, status=status.HTTP_400_BAD_REQUEST
+        )
+
 
 class LibraryDetail(APIView):
     serializer_class = LibrarySerializer
-    permission_classes = [IsLibrarianOrUser]
+    permission_classes = [permissions.IsAdminUser]
+
+    def get_permissions(self):
+        if self.request.method in ['PUT', 'DELETE']:
+            return [permissions.IsAdminUser()]
+        return [permissions.IsAuthenticated()]
 
     def get_object(self, pk):
         try:
@@ -40,3 +63,10 @@ class LibraryDetail(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        book = self.get.object(pk)
+        book.delete()
+        return Response(
+            status=status.HTTP_204_NO_CONTENT
+        )

@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from django.http import Http404
 from .models import Review
 from .serializers import ReviewSerializer
-from whirl.permissions import IsOwnerOrReadOnly, IsLibrarianOrUser
+from whirl.permissions import IsOwnerOrReadOnly
 
 
 class ReviewList(APIView):
@@ -36,7 +36,7 @@ class ReviewDetailList(APIView):
     serializer_class = ReviewSerializer
     permission_classes = [
         IsOwnerOrReadOnly,
-        IsLibrarianOrUser,
+        permissions.IsAdminUser,
         permissions.IsAuthenticatedOrReadOnly,
         ]
 
