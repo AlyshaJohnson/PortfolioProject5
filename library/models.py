@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
+from profiles.models import Profile
 
 
 def blank_true_false():
@@ -33,6 +34,7 @@ class Genre(models.Model):
     genre = models.CharField(max_length=50, blank=False)
     tag = models.OneToOneField('Tags', on_delete=models.PROTECT)
     books = models.ForeignKey('Book', on_delete=models.PROTECT)
+    profiles = models.ForeignKey(Profile, on_delete=models.PROTECT, default="")
 
     class Meta:
         ordering = ['genre']

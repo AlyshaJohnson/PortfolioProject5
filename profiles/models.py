@@ -4,14 +4,6 @@ from multiselectfield import MultiSelectField
 from django.db.models.signals import post_save
 
 
-GENRE = (
-    ("ROMANCE", "Romance"),
-    ("COMEDY", "Comedy"),
-    ("FANTASY", "Fantasy"),
-    ("BIOGRAPHY", "Biography"),
-    ("TEXTBOOK", "Text Book"),
-    ("RECIPE", "Recipe Book"),
-    )
 MEDIUM = (
     ("HARDBACK", "Hardback"),
     ("PAPERBACK", "Paperback"),
@@ -27,8 +19,7 @@ class Profile(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=255, blank=True)
     age = models.CharField(max_length=2, blank=True)
-    genres = MultiSelectField(choices=GENRE, default=None)
-    medium = MultiSelectField(choices=MEDIUM, default=None)
+    medium = MultiSelectField(choices=MEDIUM, default=None, max_length=9)
     favourite_quote = models.TextField(blank=True)
     image = models.ImageField(
         upload_to='images/', default='../default_profile_qdjgyp'
