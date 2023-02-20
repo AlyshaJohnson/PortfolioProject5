@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'profiles',
     'library',
     'reviews',
+    'comments',
 ]
 
 SITE_ID = 1
