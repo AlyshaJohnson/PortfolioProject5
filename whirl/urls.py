@@ -26,4 +26,4 @@ urlpatterns = [
     path('', include("profiles.urls")),
     path('', include("library.urls")),
     path('', include("reviews.urls")),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
