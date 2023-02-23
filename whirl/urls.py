@@ -27,4 +27,5 @@ urlpatterns = [
     path('', include("library.urls")),
     path('', include("reviews.urls")),
     path('', include("comments.urls")),
+    path('', include('likes.urls')),
 ]
