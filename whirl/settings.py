@@ -84,14 +84,7 @@ if 'CLIENT_ORIGIN_DEV' in os.environ:
         rf"{extracted_url}(eu|us)\d+\w\.gitpod\.io$",
     ]
 
-if settings.DEBUG:
-    CORS_ORIGIN_ALLOW_ALL = True
-    INSTALLED_APPS.append(
-        'corsheaders'
-    )
-    MIDDLEWARE.append(
-        'corsheaders.middleware.CorsMiddleware',
-    )
+CORS_ALLOW_CREDENTIALS_ALL = True
 
 ROOT_URLCONF = 'whirl.urls'
 
