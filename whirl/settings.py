@@ -76,10 +76,6 @@ MIDDLEWARE = [
 ]
 
 if 'CLIENT_ORIGIN_DEV' in os.environ:
-    try:
-        extracted_url = re.match(r'^.+-', os.environ.get('CLIENT_ORIGIN_DEV', ''), re.IGNORECASE).group(0)  # noqa
-    except AttributeError:
-        extracted_url = re.match(r'^.+-', os.environ.get('CLIENT_ORIGIN_DEV', ''), re.IGNORECASE)  # noqa
     CORS_ALLOWED_ORIGIN_REGEXES = [
         rf"{extracted_url}(eu|us)\d+\w\.gitpod\.io$",
     ]
