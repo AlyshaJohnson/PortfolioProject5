@@ -19,12 +19,18 @@ class Profile(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=255, blank=True)
     age = models.CharField(max_length=2, blank=True)
-    medium = MultiSelectField(choices=MEDIUM, default=None, max_length=9)
+    medium = MultiSelectField(choices=MEDIUM, default=None, max_length=9, blank=True)  # noqa
     favourite_quote = models.TextField(blank=True)
     image = models.ImageField(
         upload_to='images/', default='../default_profile_qdjgyp'
     )
     visibility = models.IntegerField(choices=YES_NO, default=1)
+    is_librarian = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        if self.owner.is_superuser:
+            self.is_librarian = True
+        super(Profile, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ['-created_at']
