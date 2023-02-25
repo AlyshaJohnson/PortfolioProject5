@@ -21,9 +21,9 @@ class Review(models.Model):
     date_added = models.DateTimeField(auto_now_add=True)
     book_started = models.DateField(blank=True, null=True)
     book_finished = models.DateField(blank=True, null=True)
-    rating = models.IntegerField(choices=RATING, default=None)
+    rating = models.CharField(max_length=1, choices=RATING, default=None)
     tags = models.ManyToManyField(Tags, blank=True)
-    visibility = models.IntegerField(choices=YES_NO, default=1)
+    draft = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['title']
