@@ -27,11 +27,6 @@ class Profile(models.Model):
     visibility = models.IntegerField(choices=YES_NO, default=1)
     is_librarian = models.BooleanField(default=False)
 
-    def save(self, *args, **kwargs):
-        if self.owner.is_superuser:
-            self.is_librarian = True
-        super(Profile, self).save(*args, **kwargs)
-
     class Meta:
         ordering = ['-created_at']
 
@@ -41,7 +36,10 @@ class Profile(models.Model):
 
 def create_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(owner=instance)
+        Profile.objects.create(
+            owner=instance,
+            is_librarian=instance.is_superuser
+            )
 
 
 post_save.connect(create_profile, sender=User)
