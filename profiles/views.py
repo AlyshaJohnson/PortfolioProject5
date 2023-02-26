@@ -6,6 +6,7 @@ from .serializers import ProfileSerializer
 from django.http import Http404
 from whirl.permissions import IsOwnerOrReadOnly
 from django.db.models import Count
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 class ProfileList(APIView):
@@ -18,6 +19,10 @@ class ProfileList(APIView):
     filter_backends = [
         filters.OrderingFilter,
         filters.SearchFilter,
+        DjangoFilterBackend,
+    ]
+    filterset_fields = [
+        'owner__following__followed__profile',
     ]
     search_fields = [
         'owner__username',

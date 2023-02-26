@@ -7,6 +7,7 @@ Django==3.2
 django-allauth==0.52.0
 django-cloudinary-storage==0.3.0
 django-cors-headers==3.13.0
+django-filter==22.1
 django-multiselectfield==0.1.12
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.2.2
