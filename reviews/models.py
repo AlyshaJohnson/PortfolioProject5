@@ -22,6 +22,8 @@ class Review(models.Model):
     book_started = models.DateField(blank=True, null=True)
     book_finished = models.DateField(blank=True, null=True)
     rating = models.CharField(max_length=1, choices=RATING, default=None)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     tags = models.ManyToManyField(Tags, blank=True)
     draft = models.BooleanField(default=False)
 

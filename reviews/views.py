@@ -1,35 +1,37 @@
-from rest_framework import status, permissions
+from rest_framework import status, permissions, generics, filters
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.http import Http404
 from .models import Review
 from .serializers import ReviewSerializer
 from whirl.permissions import IsOwnerOrReadOnly
+from django.db.models import Count
 
 
 class ReviewList(APIView):
     serializer_class = ReviewSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    queryset = Review.objects.annotate(
+        likes_count=Count('likes', distinct=True),
+        comments_count=Count('comment', distinct=True)
+    ).order_by('-created_at')
+    filter_backends = [
+        filters.OrderingFilter,
+        filters.OrderingFilter,
+        filters.SearchFilter,
+    ]
+    search_fields = [
+        'owner__username',
+        'title',
+    ]
+    ordering_fields = [
+        'likes_count',
+        'comments_count',
+        'likes__created_at',
+    ]
 
-    def get(self, request):
-        reviews = Review.objects.all()
-        serializer = ReviewSerializer(
-            reviews, many=True, context={'request': request}
-        )
-        return Response(serializer.data)
-
-    def post(self, request):
-        serializer = ReviewSerializer(
-            data=request.data, context={'request': request}
-        )
-        if serializer.is_valid():
-            serializer.save(owner=request.user)
-            return Response(
-                serializer.data, status=status.HTTP_201_CREATED
-            )
-        return Response(
-            serializer.errors, status=status.HTTP_400_BAD_REQUEST
-        )
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 
 class ReviewDetailList(APIView):
@@ -39,31 +41,14 @@ class ReviewDetailList(APIView):
         permissions.IsAdminUser,
         permissions.IsAuthenticatedOrReadOnly,
         ]
-
-    def get_object(self, pk):
-        try:
-            review = Review.objects.get(pk=pk)
-            return review
-        except Review.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk):
-        review = self.get_object(pk)
-        serializer = ReviewSerializer(review)
-        return Response(serializer.data)
-
-    def put(self, request, pk):
-        review = self.get_object(pk)
-        serializer = ReviewSerializer(review, data=request.data)
-        self.check_object_permissions(self.request, reviews)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    queryset = Review.objects.annotate(
+        likes_count=Count('likes', distinct=True),
+        comments_count=Count('comment', distinct=True)
+    ).order_by('-created_at')
 
     def delete(self, request, pk):
-        post = self.get.object(pk)
-        post.delete()
+        review = self.get.object(pk)
+        review.delete()
         return Response(
             status=status.HTTP_204_NO_CONTENT
         )
