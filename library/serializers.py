@@ -8,5 +8,5 @@ class LibrarySerializer(serializers.ModelSerializer):
         fields = [
             'id', 'title', 'author', 'ISBN', 'publisher',
             'published', 'blurb', 'series_title',
-            'series_book_no', 'series_links'
+            'series_book_no', 'series_links', 'cover',
         ]

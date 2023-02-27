@@ -1,5 +1,4 @@
-from rest_framework import permissions, filters
-from rest_framework.views import APIView
+from rest_framework import permissions, filters, generics
 from rest_framework.response import Response
 from django.http import Http404
 from .models import Book, Genre, Tags
@@ -7,7 +6,7 @@ from .serializers import LibrarySerializer
 from django.db.models import Count
 
 
-class LibraryList(APIView):
+class LibraryList(generics.ListCreateAPIView):
     serializer_class = LibrarySerializer
     queryset = Book.objects.annotate(
         books_count=Count('title', distinct=True),
@@ -50,7 +49,7 @@ class LibraryList(APIView):
         )
 
 
-class LibraryDetail(APIView):
+class LibraryDetail(generics.ListCreateAPIView):
     serializer_class = LibrarySerializer
     permission_classes = [permissions.IsAdminUser]
 

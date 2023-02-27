@@ -15,6 +15,9 @@ def blank_true_false():
 class Book(models.Model):
     title = models.CharField(max_length=50, blank=False)
     author = models.CharField(max_length=50, blank=False)
+    cover = models.ImageField(
+        upload_to='images/', default='../default_cover_qdjgyp'
+    )
     ISBN = models.CharField(max_length=50, blank=True)
     publisher = models.CharField(max_length=50, blank=True)
     published = models.DateField(blank=True, null=True)

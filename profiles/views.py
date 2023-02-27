@@ -9,7 +9,7 @@ from django.db.models import Count
 from django_filters.rest_framework import DjangoFilterBackend
 
 
-class ProfileList(APIView):
+class ProfileList(generics.ListCreateAPIView):
     queryset = Profile.objects.annotate(
         reviews_count=Count('owner__review', distinct=True),
         followers_count=Count('owner__followed', distinct=True),
@@ -36,7 +36,7 @@ class ProfileList(APIView):
     ]
 
 
-class ProfileDetail(APIView):
+class ProfileDetail(generics.ListCreateAPIView):
     permission_classes = [IsOwnerOrReadOnly]
     queryset = Profile.objects.all()
     queryset = Profile.objects.annotate(
