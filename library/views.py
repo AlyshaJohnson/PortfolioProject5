@@ -29,24 +29,8 @@ class LibraryList(generics.ListCreateAPIView):
             return [permissions.IsAdminUser()]
         return [permissions.IsAuthenticated()]
 
-    def get(self, request):
-        books = Book.objects.all()
-        serializer = LibrarySerializer(books, many=True)
-        self.check_object_permissions(self.request, books)
-        return Response(serializer.data)
-
-    def post(self, request):
-        serializer = LibrarySerializer(
-            data=request.data, context={'request': request}
-        )
-        if serializer.is_valid():
-            serializer.save()
-            return Response(
-                serializer.data, status=status.HTTP_201_CREATED
-            )
-        return Response(
-            serializer.errors, status=status.HTTP_400_BAD_REQUEST
-        )
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 
 class LibraryDetail(generics.ListCreateAPIView):

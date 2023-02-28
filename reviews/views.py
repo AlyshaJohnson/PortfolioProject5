@@ -36,8 +36,11 @@ class ReviewList(generics.ListCreateAPIView):
         'likes__created_at',
     ]
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
-class ReviewDetailList(generics.ListCreateAPIView):
+
+class ReviewDetailList(APIView):
     serializer_class = ReviewSerializer
     permission_classes = [
         IsOwnerOrReadOnly,
