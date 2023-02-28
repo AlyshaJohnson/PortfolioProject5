@@ -32,6 +32,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [(
         'rest_framework.authentication.SessionAuthentication'
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
         if 'DEV' in os.environ
         else 'dj_rest_auth.jwt_auth.JWTCookieAuthentication'
     )],
@@ -45,11 +46,14 @@ if 'DEV' not in os.environ:
         'rest_framework.renderers.JSONRenderer',
     ]
 
-USE_JWT = True
+REST_AUTH = {
+    'USE_JWT': True,
+    'JWT_AUTH_COOKIE': '/my-app-auth',
+    'JWT_AUTH_REFRESH_COOKIE': '/my-refresh-token',
+}
+
 REST_USE_JWT = True
 JWT_AUTH_SECURE = True
-JWT_AUTH_COOKIE = 'my-app-auth'
-JWT_AUTH_REFRESH_COOKIE = 'my-refresh-token'
 JWT_AUTH_SAMESITE = 'None'
 
 CORS_ALLOW_CREDENTIALS = True
@@ -86,6 +90,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'dj_rest_auth.registration',
+    'rest_framework_simplejwt',
     'corsheaders',
     'cloudinary',
     'rest_framework',
