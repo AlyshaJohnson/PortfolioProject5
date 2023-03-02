@@ -8,6 +8,7 @@ class ReviewSerializer(serializers.ModelSerializer):
     is_owner = serializers.SerializerMethodField()
     profile_id = serializers.ReadOnlyField(source='owner.profile.id')
     profile_image = serializers.ReadOnlyField(source='owner.profile.image.url')
+    book_image = serializers.ReadOnlyField(source='book.cover.url')
     like_id = serializers.SerializerMethodField()
     likes_count = serializers.ReadOnlyField()
     comments_count = serializers.ReadOnlyField()
@@ -17,7 +18,8 @@ class ReviewSerializer(serializers.ModelSerializer):
         return request.user == obj.owner
 
     def get_like_id(self, obj):
-        user = self.context['request'].user
+        request = self.context['request']
+        user = request.user
         if user.is_authenticated:
             like = Like.objects.filter(
                 owner=user, review=obj
@@ -30,7 +32,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'book', 'title', 'description', 'book_started',
             'book_finished', 'rating', 'created_at', 'updated_at',
-            'tags', 'visibility', 'like_id', 'likes_count',
+            'tags', 'draft', 'like_id', 'likes_count',
             'comments_count', 'owner', 'is_owner', 'profile_id',
-            'profile_image',
+            'profile_image', 'book_image',
         ]
