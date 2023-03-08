@@ -26,46 +26,24 @@ class LibraryList(generics.ListCreateAPIView):
 
     def get_permissions(self):
         if self.request.method in ['POST']:
-            return [permissions.IsAdminUser()]
-        return [permissions.IsAuthenticated()]
+            permission_classes = [permissions.IsAdminUser]
+        else:
+            permission_classes = [permissions.IsAuthenticated]
+        return [permission() for permission in permission_classes]
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        serializer.save()
 
 
-class LibraryDetail(generics.ListCreateAPIView):
+class LibraryDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = LibrarySerializer
-    permission_classes = [permissions.IsAdminUser]
+    queryset = Book.objects.annotate(
+        books_count=Count('title', distinct=True),
+    )
 
     def get_permissions(self):
         if self.request.method in ['PUT', 'DELETE']:
-            return [permissions.IsAdminUser()]
-        return [permissions.IsAuthenticated()]
-
-    def get_object(self, pk):
-        try:
-            book = Book.objects.get(pk=pk)
-            return book
-        except Book.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk):
-        book = self.get_object(pk)
-        serializer = LibrarySerializer(book)
-        return Response(serializer.data)
-
-    def put(self, request, pk):
-        book = self.get_object(pk)
-        serializer = LibrarySerializer(book, data=request.data)
-        self.check_object_permissions(self.request, books)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk):
-        book = self.get.object(pk)
-        book.delete()
-        return Response(
-            status=status.HTTP_204_NO_CONTENT
-        )
+            permission_classes = [permissions.IsAdminUser]
+        else:
+            permission_classes = [permissions.IsAuthenticated]
+        return [permission() for permission in permission_classes]

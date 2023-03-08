@@ -25,10 +25,12 @@ class ReviewList(generics.ListCreateAPIView):
         'owner__followed__owner__profile',
         'likes__owner__profile',
         'owner__profile',
+        'book'
     ]
     search_fields = [
         'owner__username',
         'title',
+        'book__title'
     ]
     ordering_fields = [
         'likes_count',

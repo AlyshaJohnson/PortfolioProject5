@@ -20,7 +20,7 @@ class Profile(models.Model):
     name = models.CharField(max_length=255, blank=True)
     age = models.CharField(max_length=2, blank=True)
     medium = MultiSelectField(choices=MEDIUM, default=None, max_length=9, blank=True)  # noqa
-    favourite_quote = models.TextField(blank=True)
+    quote = models.TextField(blank=True)
     image = models.ImageField(
         upload_to='images/', default='../default_profile_qdjgyp'
     )

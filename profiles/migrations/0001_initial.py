@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
                 ('age', models.CharField(blank=True, max_length=2)),
                 ('genres', multiselectfield.db.fields.MultiSelectField(choices=[('ROMANCE', 'Romance'), ('COMEDY', 'Comedy'), ('FANTASY', 'Fantasy'), ('BIOGRAPHY', 'Biography'), ('TEXTBOOK', 'Text Book'), ('RECIPE', 'Recipe Book')], default=None, max_length=48)),
                 ('medium', multiselectfield.db.fields.MultiSelectField(choices=[('HARDBACK', 'Hardback'), ('PAPERBACK', 'Paperback'), ('EBOOK', 'E-Book'), ('AUDIO', 'Audiobook')], default=None, max_length=30)),
-                ('favourite_quote', models.TextField(blank=True)),
+                ('quote', models.TextField(blank=True)),
                 ('image', models.ImageField(default='../default_profile_qdjgyp', upload_to='images/')),
                 ('owner', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
