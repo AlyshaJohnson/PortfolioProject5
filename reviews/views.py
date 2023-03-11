@@ -44,11 +44,7 @@ class ReviewList(generics.ListCreateAPIView):
 
 class ReviewDetailList(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ReviewSerializer
-    permission_classes = [
-        IsOwnerOrReadOnly,
-        permissions.IsAdminUser,
-        permissions.IsAuthenticatedOrReadOnly,
-        ]
+    permission_classes = [IsOwnerOrReadOnly]
     queryset = Review.objects.annotate(
         likes_count=Count('likes', distinct=True),
         comments_count=Count('comment', distinct=True)
